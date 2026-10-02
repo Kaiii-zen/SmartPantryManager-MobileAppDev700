@@ -17,16 +17,7 @@ import com.kaitlin.smartpantrymanager.database.DatabaseHelper;
 import com.kaitlin.smartpantrymanager.models.PantryItem;
 
 import java.util.List;
-
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.kaitlin.smartpantrymanager.R;
-
+import java.util.ArrayList;
 public class PantryListActivity extends AppCompatActivity implements PantryAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
@@ -44,14 +35,15 @@ public class PantryListActivity extends AppCompatActivity implements PantryAdapt
 
         recyclerView = findViewById(R.id.recyclerViewPantry);
         textEmpty = findViewById(R.id.textEmptyPantry);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadPantryItems();
 
         // FAB opens Add/edit screen
         FloatingActionButton fab = findViewById(R.id.fabAddIngredient);
         fab.setOnClickListener(v -> {
-           //  Intent intent = new Intent(PantryListActivity.this,
-           //         AddEditIngredientActivity.class);
-          //   startActivity(intent);
+            Intent intent = new Intent(PantryListActivity.this,
+                   AddEditIngredientActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -59,11 +51,21 @@ public class PantryListActivity extends AppCompatActivity implements PantryAdapt
     protected void onResume() {
         super.onResume();
         // refresh items immediately
+        android.util.Log.d("PANTRY_DEBUG", "onResume fired, loading items");
         loadPantryItems();
     }
 
     private void loadPantryItems() {
-        pantryItems = db.getAllPantryItems();
+        List<PantryItem> fresh = db.getAllPantryItems();
+
+        // rebuild the adapters data source in place
+        if (pantryItems == null) {
+            pantryItems = fresh;
+        } else {
+            pantryItems.clear();
+            pantryItems.addAll(fresh);
+        }
+
 
         if (adapter == null) {
             adapter = new PantryAdapter(pantryItems, this);
@@ -73,21 +75,23 @@ public class PantryListActivity extends AppCompatActivity implements PantryAdapt
         }
 
         // show or hide the empty state
-        if (pantryItems.isEmpty()) {
-            textEmpty.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            textEmpty.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+        if (textEmpty != null) {
+            if (pantryItems.isEmpty()) {
+                textEmpty.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                textEmpty.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     // row tap: open edit screen with items id
     @Override
     public void onItemClick(PantryItem item) {
-        // Intent intent = new Intent(this, AddEditIngredientActivity.class);
-       // intent.putExtra("pantry_item_id", item.getId());
-        // startActivity(intent);
+         Intent intent = new Intent(this, AddEditIngredientActivity.class);
+         intent.putExtra("pantry_item_id", item.getId());
+         startActivity(intent);
     }
 
     // row long-press: confirm delete
