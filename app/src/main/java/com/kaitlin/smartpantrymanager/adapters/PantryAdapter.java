@@ -3,6 +3,7 @@ package com.kaitlin.smartpantrymanager.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,11 +53,16 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         }
 
         // Attach click listeners
+        // tap opens edit screen
         holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
+
+        // Long press deletes row
         holder.itemView.setOnLongClickListener(v -> {
-            listener.onItemClick(item);
+            listener.onItemLongClick(item);
             return true;
         });
+
+        holder.buttonDelete.setOnClickListener(v -> listener.onItemLongClick(item));
     }
 
     @Override
@@ -68,12 +74,14 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         TextView textName;
         TextView textQuantity;
         TextView textExpiry;
+        ImageButton buttonDelete;
 
         PantryViewHolder(@NonNull View itemView) {
             super(itemView);
             textName = itemView.findViewById(R.id.textIngredientName);
             textQuantity = itemView.findViewById(R.id.textIngredientQuantity);
             textExpiry = itemView.findViewById(R.id.textIngredientExpiry);
+            buttonDelete = itemView.findViewById(R.id.buttonDelete);
         }
     }
 }
