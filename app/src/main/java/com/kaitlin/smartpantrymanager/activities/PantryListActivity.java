@@ -35,6 +35,7 @@ public class PantryListActivity extends AppCompatActivity implements PantryAdapt
 
         recyclerView = findViewById(R.id.recyclerViewPantry);
         textEmpty = findViewById(R.id.textEmptyPantry);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadPantryItems();
 
@@ -43,6 +44,14 @@ public class PantryListActivity extends AppCompatActivity implements PantryAdapt
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(PantryListActivity.this,
                    AddEditIngredientActivity.class);
+            startActivity(intent);
+        });
+
+        com.google.android.material.button.MaterialButton findRecipes =
+                findViewById(R.id.buttonFindRecipes);
+        findRecipes.setOnClickListener(v -> {
+            Intent intent = new Intent(PantryListActivity.this,
+                    SuggestedRecipesActivity.class);
             startActivity(intent);
         });
     }

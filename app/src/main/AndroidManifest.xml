@@ -25,6 +25,10 @@
         <activity android:name=".activities.AddEditIngredientActivity"
             android:label="Add / Edit Ingredient"
             android:parentActivityName=".activities.PantryListActivity" />
+
+        <activity android:name=".activities.SuggestedRecipesActivity"
+            android:label="Suggested Recipes"
+            android:parentActivityName=".activities.PantryListActivity" />
     </application>
 
 </manifest>
